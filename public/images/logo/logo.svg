@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 120">
+  <defs>
+    <style>
+      .cls-1 { fill: #E89CA9; }
+      .cls-2 { fill: #333333; font-family: 'Playfair Display', serif; font-size: 36px; font-weight: 600; letter-spacing: 0.05em; }
+    </style>
+  </defs>
+  <!-- Icon: Stylized Lotus/Nail Blossom -->
+  <g transform="translate(20, 25)">
+    <path class="cls-1" d="M35,65 C35,65 15,45 15,30 C15,15 25,5 35,20 C45,5 55,15 55,30 C55,45 35,65 35,65 Z" opacity="0.8"/>
+    <path class="cls-1" d="M35,65 C35,65 5,55 5,40 C5,25 15,20 25,30 C15,10 30,0 40,15" opacity="0.6" transform="rotate(-20, 35, 65)"/>
+    <path class="cls-1" d="M35,65 C35,65 65,55 65,40 C65,25 55,20 45,30 C55,10 40,0 30,15" opacity="0.6" transform="rotate(20, 35, 65)"/>
+  </g>
+  <!-- Text -->
+  <text x="110" y="75" class="cls-2">Thuy's Nail</text>
+</svg>

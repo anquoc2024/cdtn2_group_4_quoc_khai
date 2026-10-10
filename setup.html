@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Setup Thuy's Nail Database</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #70585b 0%, #8a4c58 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .container {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            max-width: 600px;
+            width: 100%;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        h1 { color: #70585b; margin-bottom: 20px; }
+        .success { color: #22c55e; }
+        .error { color: #ef4444; }
+        .info { color: #3b82f6; }
+        .btn {
+            display: inline-block;
+            background: #70585b;
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 10px 5px;
+        }
+        .btn:hover { background: #8a4c58; }
+        .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+        pre {
+            background: #f3f4f6;
+            padding: 15px;
+            border-radius: 10px;
+            overflow-x: auto;
+            font-size: 12px;
+            text-align: left;
+            margin: 15px 0;
+            max-height: 300px;
+        }
+        .log { margin: 10px 0; padding: 10px; border-radius: 5px; }
+        .log-success { background: #dcfce7; color: #166534; }
+        .log-error { background: #fee2e2; color: #991b1b; }
+        .log-info { background: #dbeafe; color: #1e40af; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚀 Setup Thuy's Nail Database</h1>
+        <p>Ket noi: <strong>Supabase Project</strong></p>
+        
+        <button class="btn" onclick="runSetup()">Bat Dau Setup</button>
+        <button class="btn" onclick="testConnection()">Test Ket Noi</button>
+        
+        <div id="log"></div>
+        
+        <h3 style="margin-top: 30px;">Hoac chay thủ công trong Supabase:</h3>
+        <p>1. Vao <a href="https://supabase.com/dashboard/project/drrjeuyjildgitwepvdn/sql" target="_blank">SQL Editor</a></p>
+        <p>2. Copy SQL ben duoi va chay</p>
+        
+        <pre id="sqlCode">
+-- Copy vao Supabase SQL Editor
+
+-- 1. Users
+CREATE TABLE users (
+    id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+    email TEXT UNIQUE NOT NULL,
+    password TEXT NOT NULL,
+    name TEXT,
+    role TEXT DEFAULT 'user',
+    phone TEXT,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- 2. Services
+CREATE TABLE services (
+    id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+    name TEXT NOT NULL,
+    description TEXT,
+    price TEXT NOT NULL,
+    duration TEXT,
+    category TEXT,
+    image_url TEXT,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- 3. Designs
+CREATE TABLE designs (
+    id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+    name TEXT NOT NULL,
+    description TEXT,
+    category TEXT,
+    image_url TEXT,
+    is_custom BOOLEAN DEFAULT FALSE,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- 4. Bookings
+CREATE TABLE bookings (
+    id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+    user_id UUID,
+    user_name TEXT,
+    user_email TEXT,
+    service_id UUID,
+    service_name TEXT,
+    service_price TEXT,
+    design_id UUID,
+    design_name TEXT,
+    design_image TEXT,
+    booking_date DATE NOT NULL,
+    booking_time TEXT NOT NULL,
+    status TEXT DEFAULT 'pending',
+    notes TEXT,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- 5. Blocked Dates
+CREATE TABLE blocked_dates (
+    id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+    blocked_date DATE UNIQUE NOT NULL,
+    reason TEXT,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- 6. Blocked Times
+CREATE TABLE blocked_times (
+    id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+    blocked_date DATE NOT NULL,
+    blocked_time TEXT NOT NULL,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- Seed Admin
+INSERT INTO users (email, password, name, role) 
+VALUES ('admin@thuysnail.com', 'admin123', 'Admin', 'admin')
+ON CONFLICT (email) DO NOTHING;
+
+-- Seed Services
+INSERT INTO services (name, description, price, duration, category, image_url) VALUES
+('Signature Gel Manicure', 'Long-lasting, high-gloss finish', '$45', '60 mins', 'manicure', 'https://images.unsplash.com/photo-1604654894610-df63bc536371?w=400&h=300&fit=crop'),
+('Deluxe Spa Pedicure', 'Includes sea salt soak & massage', '$65', '75 mins', 'pedicure', 'https://images.unsplash.com/photo-1519014816548-bf5fe059798b?w=400&h=300&fit=crop'),
+('Nail Art Add-on', 'From minimalist to complex art', '$15', '+20 mins', 'art', 'https://images.unsplash.com/photo-1522337660859-02fbefca4702?w=400&h=300&fit=crop'),
+('Acrylic Full Set', 'Durable acrylic extensions', '$55', '90 mins', 'acrylic', 'https://images.unsplash.com/photo-1607779097040-26e80aa78e66?w=400&h=300&fit=crop'),
+('Gel Extensions', 'Natural-looking gel extensions', '$60', '90 mins', 'gel', 'https://images.unsplash.com/photo-1632345031435-8727f6897d53?w=400&h=300&fit=crop'),
+('Classic Manicure', 'Traditional nail care', '$25', '45 mins', 'manicure', 'https://images.unsplash.com/photo-1519014816548-bf5fe059798b?w=400&h=300&fit=crop')
+ON CONFLICT DO NOTHING;
+
+-- Seed Designs
+INSERT INTO designs (name, description, category, image_url) VALUES
+('Modern French', 'Timeless elegance', 'simple', 'https://images.unsplash.com/photo-1604654894610-df63bc536371?w=400&h=400&fit=crop'),
+('Abstract Blush', 'Artistic statement', 'cute', 'https://images.unsplash.com/photo-1519014816548-bf5fe059798b?w=400&h=400&fit=crop'),
+('Rose Gold Shimmer', 'Elegant glitter', 'glitter', 'https://images.unsplash.com/photo-1522337660859-02fbefca4702?w=400&h=400&fit=crop'),
+('Spring Daisies', 'Cute floral', 'cute', 'https://images.unsplash.com/photo-1607779097040-26e80aa78e66?w=400&h=400&fit=crop'),
+('Korean Minimalist', 'Clean Korean style', 'korean', 'https://images.unsplash.com/photo-1632345031435-8727f6897d53?w=400&h=400&fit=crop'),
+('Pink Ombre', 'Gradient effect', 'ombre', 'https://images.unsplash.com/photo-1519014816548-bf5fe059798b?w=400&h=400&fit=crop'),
+('Bridal Lace', 'Perfect for your special day', 'wedding', 'https://images.unsplash.com/photo-1604654894610-df63bc536371?w=400&h=400&fit=crop'),
+('Classic Nude', 'Natural elegance', 'simple', 'https://images.unsplash.com/photo-1607779097040-26e80aa78e66?w=400&h=400&fit=crop')
+ON CONFLICT DO NOTHING;
+
+-- Seed Blocked Dates
+INSERT INTO blocked_dates (blocked_date, reason) VALUES
+('2026-01-01', 'New Year'),
+('2026-04-30', 'Reunification Day'),
+('2026-05-01', 'Labor Day'),
+('2026-09-02', 'National Day'),
+('2026-12-25', 'Christmas Day')
+ON CONFLICT (blocked_date) DO NOTHING;
+
+-- Enable RLS & Policies
+ALTER TABLE users ENABLE ROW LEVEL SECURITY;
+ALTER TABLE services ENABLE ROW LEVEL SECURITY;
+ALTER TABLE designs ENABLE ROW LEVEL SECURITY;
+ALTER TABLE bookings ENABLE ROW LEVEL SECURITY;
+ALTER TABLE blocked_dates ENABLE ROW LEVEL SECURITY;
+ALTER TABLE blocked_times ENABLE ROW LEVEL SECURITY;
+
+-- Allow all
+CREATE POLICY "allow_all" ON users FOR ALL USING (true) WITH CHECK (true);
+CREATE POLICY "allow_all" ON services FOR ALL USING (true) WITH CHECK (true);
+CREATE POLICY "allow_all" ON designs FOR ALL USING (true) WITH CHECK (true);
+CREATE POLICY "allow_all" ON bookings FOR ALL USING (true) WITH CHECK (true);
+CREATE POLICY "allow_all" ON blocked_dates FOR ALL USING (true) WITH CHECK (true);
+CREATE POLICY "allow_all" ON blocked_times FOR ALL USING (true) WITH CHECK (true);
+        </pre>
+
+        <script>
+            const SUPABASE_URL = 'https://drrjeuyjildgitwepvdn.supabase.co';
+            const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRycmpldXlqaWxkZ2l0d2VwdmRuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODI3MjAwMTgsImV4cCI6MjA5ODI5NjAxOH0.5rWZ-nBCG_xC3TFj4JLC18HG23r6JgxG5lOdFR3gUAc';
+
+            function log(msg, type = 'info') {
+                const div = document.createElement('div');
+                div.className = `log log-${type}`;
+                div.textContent = msg;
+                document.getElementById('log').appendChild(div);
+            }
+
+            async function fetchAPI(url, options = {}) {
+                const res = await fetch(url, {
+                    ...options,
+                    headers: {
+                        'apikey': SUPABASE_KEY,
+                        'Authorization': `Bearer ${SUPABASE_KEY}`,
+                        'Content-Type': 'application/json',
+                        ...options.headers
+                    }
+                });
+                return res.json();
+            }
+
+            async function testConnection() {
+                log('Testing connection...', 'info');
+                try {
+                    const data = await fetchAPI(`${SUPABASE_URL}/rest/v1/users?select=id&limit=1`);
+                    log('✅ Ket noi thanh cong!', 'success');
+                } catch (e) {
+                    log('❌ Loi ket noi: ' + e.message, 'error');
+                }
+            }
+
+            async function runSetup() {
+                log('Bat dau setup...', 'info');
+                
+                // Tables to create
+                const tables = [
+                    {
+                        name: 'users',
+                        sql: `CREATE TABLE users (id UUID DEFAULT gen_random_uuid() PRIMARY KEY, email TEXT UNIQUE NOT NULL, password TEXT NOT NULL, name TEXT, role TEXT DEFAULT 'user', phone TEXT, created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW())`
+                    },
+                    {
+                        name: 'services',
+                        sql: `CREATE TABLE services (id UUID DEFAULT gen_random_uuid() PRIMARY KEY, name TEXT NOT NULL, description TEXT, price TEXT NOT NULL, duration TEXT, category TEXT, image_url TEXT, created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW())`
+                    },
+                    {
+                        name: 'designs',
+                        sql: `CREATE TABLE designs (id UUID DEFAULT gen_random_uuid() PRIMARY KEY, name TEXT NOT NULL, description TEXT, category TEXT, image_url TEXT, is_custom BOOLEAN DEFAULT FALSE, created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW())`
+                    },
+                    {
+                        name: 'bookings',
+                        sql: `CREATE TABLE bookings (id UUID DEFAULT gen_random_uuid() PRIMARY KEY, user_id UUID, user_name TEXT, user_email TEXT, service_id UUID, service_name TEXT, service_price TEXT, design_id UUID, design_name TEXT, design_image TEXT, booking_date DATE NOT NULL, booking_time TEXT NOT NULL, status TEXT DEFAULT 'pending', notes TEXT, created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW())`
+                    },
+                    {
+                        name: 'blocked_dates',
+                        sql: `CREATE TABLE blocked_dates (id UUID DEFAULT gen_random_uuid() PRIMARY KEY, blocked_date DATE UNIQUE NOT NULL, reason TEXT, created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW())`
+                    },
+                    {
+                        name: 'blocked_times',
+                        sql: `CREATE TABLE blocked_times (id UUID DEFAULT gen_random_uuid() PRIMARY KEY, blocked_date DATE NOT NULL, blocked_time TEXT NOT NULL, created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW())`
+                    }
+                ];
+
+                for (const table of tables) {
+                    try {
+                        // Check if exists
+                        const check = await fetchAPI(`${SUPABASE_URL}/rest/v1/${table.name}?select=id&limit=1`);
+                        if (!check.error) {
+                            log(`✅ Bang ${table.name} da ton tai`, 'success');
+                            continue;
+                        }
+                        
+                        // Create via SQL
+                        const res = await fetchAPI(`${SUPABASE_URL}/rest/v1/rpc/exec`, {
+                            method: 'POST',
+                            body: JSON.stringify({ sql: table.sql })
+                        });
+                        
+                        if (res.error) {
+                            log(`⚠️ ${table.name}: ` + (res.error.message || 'Da ton tai hoac loi'), 'info');
+                        } else {
+                            log(`✅ Tao bang ${table.name} thanh cong`, 'success');
+                        }
+                    } catch (e) {
+                        log(`❌ Loi ${table.name}: ` + e.message, 'error');
+                    }
+                }
+
+                log('', 'info');
+                log('✅ Setup hoan tat!', 'success');
+                log('', 'info');
+                log('Dang nhap Admin:', 'info');
+                log('Email: admin@thuysnail.com', 'info');
+                log('Password: admin123', 'info');
+            }
+        </script>
+    </div>
+</body>
+</html>

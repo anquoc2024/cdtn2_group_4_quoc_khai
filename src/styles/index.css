@@ -1,0 +1,129 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Playfair+Display:wght@400;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    font-family: 'Poppins', sans-serif;
+    background-color: #FFFFFF;
+    color: #333333;
+    line-height: 1.6;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Playfair Display', serif;
+  }
+
+  img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  a {
+    text-decoration: none;
+    color: inherit;
+  }
+
+  button {
+    cursor: pointer;
+    font-family: 'Poppins', sans-serif;
+  }
+
+  .material-symbols-outlined {
+    font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    font-family: 'Material Symbols Outlined';
+  }
+}
+
+@layer components {
+  .container-custom {
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+  }
+
+  .section-padding {
+    @apply py-16 md:py-20 lg:py-24;
+  }
+
+  .heading-primary {
+    @apply text-3xl md:text-4xl lg:text-5xl font-bold text-gray-800;
+  }
+
+  .heading-secondary {
+    @apply text-2xl md:text-3xl lg:text-4xl font-semibold text-gray-800;
+  }
+
+  .text-body {
+    @apply text-gray-600 leading-relaxed;
+  }
+
+  .btn-primary {
+    @apply bg-rose-pink text-white px-6 py-3 rounded-xl font-medium
+           transition-all duration-300 hover:bg-rose-dark hover:shadow-hover
+           hover:scale-105 active:scale-95;
+  }
+
+  .btn-secondary {
+    @apply border-2 border-rose-pink text-rose-pink px-6 py-3 rounded-xl font-medium
+           transition-all duration-300 hover:bg-rose-pink hover:text-white
+           hover:shadow-hover hover:scale-105 active:scale-95;
+  }
+
+  .btn-outline {
+    @apply border border-gray-300 text-gray-700 px-4 py-2 rounded-xl
+           transition-all duration-300 hover:border-rose-pink hover:text-rose-pink;
+  }
+
+  .card {
+    @apply bg-white rounded-xl shadow-card transition-all duration-300 hover:shadow-hover;
+  }
+
+  .card-hover {
+    @apply hover:scale-[1.02] hover:shadow-hover transition-all duration-300;
+  }
+
+  .section-title {
+    @apply text-3xl md:text-4xl font-playfair font-bold text-center mb-4;
+  }
+
+  .section-subtitle {
+    @apply text-center text-gray-600 max-w-2xl mx-auto mb-12;
+  }
+}
+
+/* Scrollbar Custom */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #E89CA9;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #D4818E;
+}
+
+/* Selection */
+::selection {
+  background: #E89CA9;
+  color: white;
+}
